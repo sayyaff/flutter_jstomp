@@ -6,3 +6,9 @@
 .pub/
 
 build/
+
+android/gradle/
+
+android/gradlew\.bat
+
+android/gradlew
