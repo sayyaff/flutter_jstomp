@@ -137,6 +137,27 @@ public class StompService extends Service {
         }, stompHeaderList);
     }
 
+    public void registerStompConnectionListener(StompConfig config, List<StompHeader> headers) {
+        StompProvider.get().connect(new StompProvider.OnStompConnectionListener() {
+            @Override
+            public void onConnectionOpened() {
+                //取消定时器
+                cancelTimer();
+            }
+
+            @Override
+            public void onConnectionError(String error) {
+                Log.e(TAG, "Stomp 错误" + error);
+            }
+
+            @Override
+            public void onConnectionClosed() {
+                Log.e(TAG, "Stomp 关闭");
+                startConnTimer();
+            }
+        }, headers);
+    }
+
 
     /**
      * 内部服务，API18 以上 的服务保活机制，
