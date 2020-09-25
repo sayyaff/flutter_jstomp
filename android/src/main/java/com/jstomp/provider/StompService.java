@@ -16,10 +16,12 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import androidx.annotation.Nullable;
+import ua.naiksoftware.stomp.dto.StompHeader;
 
 
 /**
@@ -123,6 +125,29 @@ public class StompService extends Service {
             }
         });
     }
+
+    public void registerStompConnectionListener(List<StompHeader> header) {
+        StompProvider.get().connect(new StompProvider.OnStompConnectionListener() {
+            @Override
+            public void onConnectionOpened() {
+                //取消定时器
+                cancelTimer();
+            }
+
+            @Override
+            public void onConnectionError(String error) {
+                Log.e(TAG, "Stomp 错误" + error);
+            }
+
+            @Override
+            public void onConnectionClosed() {
+                Log.e(TAG, "Stomp 关闭");
+                startConnTimer();
+            }
+        },header);
+    }
+
+
 
 
     /**

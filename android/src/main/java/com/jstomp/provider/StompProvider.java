@@ -173,6 +173,44 @@ public class StompProvider {
         return this;
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    public StompProvider openConnection(OnStompConnectionListener listener, Map<String, String> header) {
+
+        List<StompHeader> stompHeaders = new ArrayList<>();
+
+        //如果有自定义头，则一一添加进去
+        if (header != null && header.size() > 0) {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                stompHeaders.add(new StompHeader(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        if (mContext == null) {
+            return this;
+        }
+        try {
+            connectionListener = listener;
+            //如果StompService 已经启动了并且service没有销毁则不用重新启动服务，
+            //只需要重新注册Stomp监听即可
+            if (!stopService && StompService.GET() != null) {
+                StompService.GET().registerStompConnectionListener(stompHeaders);
+                return this;
+            }
+
+            Intent intent = new Intent(mContext, StompService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                //android8.0以上通过startForegroundService启动service
+                mContext.startForegroundService(intent);
+            } else {
+                mContext.startService(intent);
+            }
+            stopService = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
     /**
      * 重新连接stomp
      *

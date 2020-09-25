@@ -67,10 +67,20 @@ class JStomp {
   /// 打开stomp连接
   ///
   Future<bool> connection(ValueChanged onOpen,
-      {ValueChanged onError, ValueChanged onClosed}) async {
+      {ValueChanged onError, ValueChanged onClosed, Map<String, dynamic> header}) async {
     ///先注册连接状态监听器
     _onConnectionCallback(onOpen, onError, onClosed);
-    return await _channel.invokeMethod(_NativeMethod.CONNECTION);
+
+    Map<String, String> headMap = new Map();
+    if (header != null) {
+      headMap = header.map((String key, value) {
+        return new MapEntry(key, value.toString());
+      });
+    }
+
+    Map<String, dynamic> params = {"header": headMap};
+
+    return await _channel.invokeMethod(_NativeMethod.CONNECTION, params);
   }
 
   ///

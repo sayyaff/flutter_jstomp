@@ -75,7 +75,11 @@ public class JStompPlugin implements MethodCallHandler {
                     result.success(d);
                     break;
                 case FlutterCall.CONNECTION://连接
-                    boolean c = connection();
+                    Map<String, String> commHeader = null;
+                    if (call.hasArgument("header")) {
+                        commHeader = (Map<String, String>) call.argument("header");
+                    }
+                    boolean c = connection(commHeader);
                     result.success(c);
                     break;
                 case FlutterCall.SEND_MESSAGE: //发送消息
@@ -167,6 +171,35 @@ public class JStompPlugin implements MethodCallHandler {
                     channel.invokeMethod(CallFlutter.ON_CONNECTION_CLOSED, Boolean.FALSE);
                 }
             });
+            return true;
+        } catch (Exception e) {
+            //连接错误，通知flutter
+            channel.invokeMethod(CallFlutter.ON_CONNECTION_ERROR, e.getMessage());
+            return false;
+        }
+    }
+
+    private boolean connection(Map<String, String> header) {
+        try {
+            StompProvider.get().openConnection(new StompProvider.OnStompConnectionListener() {
+                @Override
+                public void onConnectionOpened() {
+                    //连接打开，通知flutter
+                    channel.invokeMethod(CallFlutter.ON_CONNECTION_OPENED, Boolean.TRUE);
+                }
+
+                @Override
+                public void onConnectionError(String error) {
+                    //连接错误，通知flutter
+                    channel.invokeMethod(CallFlutter.ON_CONNECTION_ERROR, error);
+                }
+
+                @Override
+                public void onConnectionClosed() {
+                    //连接关闭，通知flutter
+                    channel.invokeMethod(CallFlutter.ON_CONNECTION_CLOSED, Boolean.FALSE);
+                }
+            },header);
             return true;
         } catch (Exception e) {
             //连接错误，通知flutter
