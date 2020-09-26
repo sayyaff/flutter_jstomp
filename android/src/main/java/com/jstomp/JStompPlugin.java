@@ -69,7 +69,9 @@ public class JStompPlugin implements MethodCallHandler {
                     String sendUrl = call.argument("sendUrl");
                     String login = call.argument("login");
                     String passcode = call.argument("passcode");
-                    boolean b = init(url, sendUrl, login, passcode);
+                    String tripId = call.argument("tripId");
+                    String user = call.argument("user");
+                    boolean b = init(url, sendUrl, login, passcode, user, tripId);
                     result.success(b);
                     break;
                 case FlutterCall.DESTROY: //销毁，断开
@@ -125,9 +127,9 @@ public class JStompPlugin implements MethodCallHandler {
      * @param url
      * @param sendUrl
      */
-    private boolean init(String url, String sendUrl, String login, String passcode) {
+    private boolean init(String url, String sendUrl, String login, String passcode, String user, String tripId) {
         try {
-            return StompProvider.get().init(activity.getApplicationContext(), new StompConfig(url, sendUrl, login, passcode));
+            return StompProvider.get().init(activity.getApplicationContext(), new StompConfig(url, sendUrl, login, passcode, user, tripId));
         } catch (Exception e) {
             e.printStackTrace();
             return false;

@@ -55,7 +55,9 @@ class JStomp {
       {@required String url,
       @required String sendUrl,
       String login,
-      String passcode}) async {
+      String passcode,
+      String user,
+      String tripId}) async {
     ///添加native方法调用处理方法
     _channel.setMethodCallHandler(_nativeHandle);
 
@@ -64,6 +66,8 @@ class JStomp {
       "sendUrl": sendUrl,
       "login": login,
       "passcode": passcode,
+      "user": user,
+      "tripId": tripId,
     };
     bool result = await _channel.invokeMethod(_NativeMethod.INIT, params);
     return result;

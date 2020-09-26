@@ -116,6 +116,8 @@ public class StompService extends Service {
             Log.i(TAG, "StompHeader = " + config.getLogin() + "," + config.getPasscode());
             stompHeaderList.add(new StompHeader("login", config.getLogin()));
             stompHeaderList.add(new StompHeader("passcode", config.getPasscode()));
+            stompHeaderList.add(new StompHeader("user", config.getUser()));
+            stompHeaderList.add(new StompHeader("tripId", config.getTripId()));
         }
         StompProvider.get().connect(new StompProvider.OnStompConnectionListener() {
             @Override

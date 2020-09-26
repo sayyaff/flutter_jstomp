@@ -139,6 +139,8 @@ public class StompProvider {
                 Map<String, String> connectHttpHeaders = new HashMap<>();
                 connectHttpHeaders.put("login", config.getLogin());
                 connectHttpHeaders.put("passcode", config.getPasscode());
+                connectHttpHeaders.put("tripId", config.getTripId());
+                connectHttpHeaders.put("user", config.getUser());
                 mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url, connectHttpHeaders);
             } else {
                 Log.i(TAG, "不使用用户名密码登陆");

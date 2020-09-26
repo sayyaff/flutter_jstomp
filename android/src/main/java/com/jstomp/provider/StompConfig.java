@@ -32,13 +32,17 @@ public class StompConfig {
     private String login;
     /*登陆密码*/
     private String passcode;
+    private String tripId;
+    private String user;
 
 
-    public StompConfig(String url, String sendURL, String login, String passcode) {
+    public StompConfig(String url, String sendURL, String login, String passcode, String user, String tripId) {
         this.url = url;
         this.sendUrl = sendURL;
         this.login = login;
         this.passcode = passcode;
+        this.tripId = tripId;
+        this.user = user;
     }
 
 
@@ -108,5 +112,13 @@ public class StompConfig {
 
     public String getPasscode() {
         return passcode;
+    }
+
+    public String getTripId() {
+        return tripId;
+    }
+
+    public String getUser() {
+        return user;
     }
 }
